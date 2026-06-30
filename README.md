@@ -1,13 +1,15 @@
 # keytabs-matos.cc
 
-Age-encrypted Kerberos keytabs for the `MATOS.CC` realm, used by the [nixie](https://github.com/amatos/nixie) NixOS + nix-darwin configuration. All files are encrypted with [ragenix](https://github.com/yaxitech/ragenix) and decryptable by the keys listed in `secrets.nix`.
+Age-encrypted Kerberos keytabs for the `MATOS.CC` realm, used by the [nixie](https://github.com/amatos/nixie)
+NixOS + nix-darwin configuration. All files are encrypted with [ragenix](https://github.com/yaxitech/ragenix)
+and decryptable by the keys listed in `secrets.nix`.
 
 This repo was split out of `nix-secrets`, which now holds only non-keytab secrets (SSH keys, tokens, passwords, etc).
 
 ## Recipients
 
 | Name | Type | Key |
-|---|---|---|
+| --- | --- | --- |
 | `alberth` | YubiKey (slot 1) | `age1yubikey1qtpg5lwewq75p68ru0n909uzkqddkhym2mkwp37h2fwkkgfdem05ssa4m6y` |
 | `codex` | Host key (`/etc/age/host-key`) | `age1786r092jkepdahryx7t9kru8txuvreh3f2pgtvrv3u5hmjxjjy3st9udnl` |
 | `gammu` | Host key (`/etc/age/host-key`) | `age12vhj5z6zepnz7uyzks23p6rgwa7rudja7ectsrl89zf96nnmfcnq264972` |
@@ -18,7 +20,7 @@ The YubiKey identity stub is stored in `age-yubikey-identity-9ca1fbf9.txt`. Touc
 ## Secrets
 
 | File | Purpose |
-|---|---|
+| --- | --- |
 | `keytab-codex.age` | Host keytab for `codex`, deployed to `/etc/krb5.keytab` |
 | `keytab-gammu.age` | Host keytab for `gammu`, deployed to `/etc/krb5.keytab` |
 | `keytab-porkchop.age` | Host keytab for `porkchop`, deployed to `/etc/krb5.keytab` |
@@ -27,7 +29,7 @@ The YubiKey identity stub is stored in `age-yubikey-identity-9ca1fbf9.txt`. Touc
 Each host's keytab is wired into nixie via `nixie.krb5.keytabFile` (see `modules/common/krb5-client.nix`), e.g.:
 
 ```nix
-nixie.krb5.keytabFile = "${nix-secrets}/keytab-codex.age";
+nixie.krb5.keytabFile = "${keytabs-matos-cc}/keytab-codex.age";
 ```
 
 ---
@@ -51,7 +53,8 @@ cd /path/to/keytabs-matos-cc
 ragenix -e keytab-newhost.age
 ```
 
-This opens `$EDITOR`. Paste or type the keytab content, save, and close. ragenix encrypts the content to all recipients listed in `secrets.nix` and writes `keytab-newhost.age`.
+This opens `$EDITOR`. Paste or type the keytab content, save, and close. ragenix encrypts the content
+to all recipients listed in `secrets.nix` and writes `keytab-newhost.age`.
 
 Touch the YubiKey when prompted (the LED will blink).
 
@@ -60,7 +63,7 @@ Touch the YubiKey when prompted (the LED will blink).
 In the host's `default.nix`, set:
 
 ```nix
-nixie.krb5.keytabFile = "${nix-secrets}/keytab-newhost.age";
+nixie.krb5.keytabFile = "${keytabs-matos-cc}/keytab-newhost.age";
 ```
 
 ### 4. Commit both repos
@@ -78,7 +81,9 @@ git push
 
 ## Rekeying secrets (after adding a new host)
 
-When a new host is added to nixie, generate its host key (`nixos-rebuild switch` will create `/etc/age/host-key` on first activation), then add its public key to `secrets.nix` and rekey all secrets so the new host can decrypt them:
+When a new host is added to nixie, generate its host key (`nixos-rebuild switch` will create
+`/etc/age/host-key` on first activation), then add its public key to `secrets.nix` and rekey all
+secrets so the new host can decrypt them:
 
 ### 1. Get the new host's public key
 

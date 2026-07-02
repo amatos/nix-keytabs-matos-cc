@@ -153,6 +153,17 @@ Touch the YubiKey when prompted.
 - Keep `README.md`'s Recipients and Secrets tables in sync with `secrets.nix` and the
   files actually present whenever either changes.
 
+## Releases
+
+Releases use CalVer, matching nixie: `yy.mm.release` (e.g. `26.07.01`).
+
+- The release counter resets to `01` at the start of each new month.
+- Tags are GPG-signed: `git tag -s yy.mm.release -m "Release yy.mm.release"`.
+- Before tagging, check the highest existing tag for the month:
+  `git tag --list 'yy.mm.*' | sort`
+- Combine all changes since the last release into a single `CHANGELOG.md`
+  entry named after the tagged version.
+
 ## Before making changes
 
 1. Confirm the secret is actually binary — plaintext secrets, even Kerberos-related

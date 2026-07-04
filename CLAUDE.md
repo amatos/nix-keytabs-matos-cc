@@ -22,19 +22,21 @@ decryptable by the recipients declared in `secrets.nix`.
 
 ```text
 secrets.nix                          # ragenix recipients (who can decrypt what)
-age-yubikey-identity-9ca1fbf9.txt    # YubiKey identity stub, not the key
+age-yubikey-identity-*.txt           # YubiKey identity stubs, not the keys
 keytab-*.age                         # age-encrypted Kerberos keytabs
 ```
 
 ## Recipients
 
-Defined in `secrets.nix`: `alberth` (YubiKey, slot 1), plus a host age key per nixie
-host that needs to decrypt its keytab at activation time (`codex`, `gammu`,
-`porkchop`, ...). Host keys live at `/etc/age/host-key` on each host, generated on
-first activation by nixie's `modules/common/age-host-key.nix`.
+Defined in `secrets.nix`: `alberth` (an offline recovery key, no hardware), five
+backup YubiKey identities (`yubikeyd43f4e92`, `yubikey2ab5ff2f`, `yubikeybe7a2b66`,
+`yubikey49705840`, `yubikey7cb1cad0`), plus a host age key per nixie host that
+needs to decrypt its keytab at activation time (`codex`, `gammu`, `porkchop`, ...).
+Host keys live at `/etc/age/host-key` on each host, generated on first activation
+by nixie's `modules/common/age-host-key.nix`.
 
-The YubiKey's touch policy is **cached** (one touch valid for 15 seconds); PIN is not
-required.
+The YubiKeys' touch policy is **cached** (one touch valid for 15 seconds); a PIN
+is required once per session for each YubiKey.
 
 ---
 
@@ -136,7 +138,7 @@ required.
 
 ```bash
 age --decrypt \
-  -i age-yubikey-identity-9ca1fbf9.txt \
+  -i age-yubikey-identity-d43f4e92.txt \
   keytab-codex.age
 ```
 

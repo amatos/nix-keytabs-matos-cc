@@ -2,6 +2,60 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Security
+
+- **URGENT — credential exposure.** The commit that added the backup
+  YubiKeys (below) also briefly committed and pushed five plaintext
+  `keytab-*` files (no `.age` extension) to `origin/main`. Of these,
+  `keytab-codex`, `keytab-gammu`, `keytab-huginn`, and `keytab-porkchop`
+  turned out to be harmless `krb5.conf`/`kdc.conf` text snippets (no key
+  material) accidentally swept in by `git add -A`. **`keytab-ldap-porkchop`
+  was a real, binary Kerberos keytab** for the `ldap/porkchop.ts.matos.cc`
+  service principal (kvno=3) — a genuine credential exposure.
+- All five plaintext files were removed by amending the offending commit
+  (they were introduced and never existed anywhere else in history) and
+  force-pushing the cleaned history to `origin/main`.
+- **Follow-up still required:** the `ldap/porkchop.ts.matos.cc` service
+  principal's key must be regenerated on the KDC (`porkchop`) — e.g. via
+  `kadmin.local` `cpw`/`randkey` — and the resulting keytab re-extracted,
+  re-encrypted with `ragenix -e keytab-ldap-porkchop.age`, committed, and
+  deployed. Until that happens, treat the old key as compromised.
+- `.gitignore` added: ignores bare `keytab-*` files (everything except
+  `keytab-*.age`), `*.keytab`, `*.dec`, `krb5.conf`, and `kdc.conf` to
+  prevent this class of accident going forward.
+
+### Added
+
+- Five backup YubiKey identities added as recipients (`secrets.nix`
+  `users`): `age-yubikey-identity-2ab5ff2f.txt`,
+  `age-yubikey-identity-49705840.txt`,
+  `age-yubikey-identity-7cb1cad0.txt`,
+  `age-yubikey-identity-be7a2b66.txt` (new physical keys), and
+  `age-yubikey-identity-d43f4e92.txt` (a re-keyed identity for the
+  original YubiKey, serial 13125942, moved from slot 1 to slot 2)
+- `secrets.nix` — added a plain, non-YubiKey `alberth` recovery key as
+  an additional recipient alongside the five YubiKey identities above
+
+### Changed
+
+- `secrets.nix` — rotated the primary `alberth` recipient away from
+  the original YubiKey (`age-yubikey-identity-9ca1fbf9.txt`) to the
+  new recipient set above; all keytabs re-encrypted (`ragenix --rekey`)
+  accordingly
+- All five current YubiKey identities require a PIN once per session
+  (`PIN policy: Once`), unlike the retired identity (`PIN policy:
+  Never`) — `README.md` and `CLAUDE.md` updated to reflect this
+- `README.md`/`CLAUDE.md` — Recipients tables and identity-stub
+  references synced with the new recipient set in `secrets.nix`
+
+### Removed
+
+- `age-yubikey-identity-9ca1fbf9.txt` — retired YubiKey identity stub;
+  the same physical key continues on as
+  `age-yubikey-identity-d43f4e92.txt` (new slot, new PIN policy)
+
 ## 26.07.01
 
 ### Added

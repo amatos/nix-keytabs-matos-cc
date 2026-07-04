@@ -10,13 +10,22 @@ This repo was split out of `nix-secrets`, which now holds only non-keytab secret
 
 | Name | Type | Key |
 | --- | --- | --- |
-| `alberth` | YubiKey (slot 1) | `age1yubikey1qtpg5lwewq75p68ru0n909uzkqddkhym2mkwp37h2fwkkgfdem05ssa4m6y` |
+| `alberth` | Recovery key (offline, no hardware) | `age1gp5d3tzdpufcrk7f6dkr92xtx2p847k79kxxdp9nn0yjk2qvw34sws84m7` |
+| `yubikeyd43f4e92` | YubiKey (slot 2) | `age1yubikey1qdxkz5rs00du7y4284ehlkktq0h93wsqszwegjrx97scqs8ptq3f6kws7sq` |
+| `yubikey2ab5ff2f` | YubiKey (backup, slot 1) | `age1yubikey1qtn8y2ad0vr9ddazfsxy4fmlt64kknhjsll2xvfgekck3n0dc0xjvf5rah6` |
+| `yubikeybe7a2b66` | YubiKey (backup, slot 1) | `age1yubikey1qgmkn4s840hwg4kfazjn6u4r2nq9utl60chscraq4sqg9jsf0wleu5eldvv` |
+| `yubikey49705840` | YubiKey (backup, slot 1) | `age1yubikey1qtkf5924nev2a5vqncdurp729tq6xmdf27y6x95fv7kk5zje5vqr6umpnj8` |
+| `yubikey7cb1cad0` | YubiKey (backup, slot 1) | `age1yubikey1q0pmgm34s0ckw8jj9auzlvm5mc6mpxxgc5syu0aw55cqu2hnm7krqrnq60a` |
 | `codex` | Host key (`/etc/age/host-key`) | `age1786r092jkepdahryx7t9kru8txuvreh3f2pgtvrv3u5hmjxjjy3st9udnl` |
 | `gammu` | Host key (`/etc/age/host-key`) | `age12vhj5z6zepnz7uyzks23p6rgwa7rudja7ectsrl89zf96nnmfcnq264972` |
 | `porkchop` | Host key (`/etc/age/host-key`) | `age1yegmaunkewrxj3v6lt86nalta0xq5gq7dpcxrggqp8p7nlzdde4qsnq5jz` |
 | `huginn` | Host key (`/etc/age/host-key`) | `age1je5xg9s90g8l0307xpphclxj3fugvkl59ne9yna46lne9fw0wfpq59lzux` |
 
-The YubiKey identity stub is stored in `age-yubikey-identity-9ca1fbf9.txt`. Touch policy is **cached** (one touch valid for 15 seconds); PIN is not required.
+Five YubiKey identity stubs are stored in
+`age-yubikey-identity-{2ab5ff2f,49705840,7cb1cad0,be7a2b66,d43f4e92}.txt`,
+one per physical key. Touch policy is **cached** (one touch valid for 15
+seconds); a **PIN is required once per session** for these keys. `alberth`'s
+recovery key has no hardware component and is kept offline.
 
 ## Secrets
 
@@ -126,7 +135,7 @@ git push
 
 ```bash
 age --decrypt \
-  -i age-yubikey-identity-9ca1fbf9.txt \
+  -i age-yubikey-identity-d43f4e92.txt \
   keytab-codex.age
 ```
 

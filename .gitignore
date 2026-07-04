@@ -1,0 +1,9 @@
+# Decrypted/plaintext keytabs and any local working files used to
+# generate them — never commit. Only the `.age`-encrypted form belongs
+# in this repo.
+keytab-*
+!keytab-*.age
+*.keytab
+*.dec
+krb5.conf
+kdc.conf

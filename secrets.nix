@@ -34,8 +34,8 @@ in
     porkchop
   ];
   "keytab-ldap-porkchop.age".publicKeys = [
-    porkchop
     users
+    porkchop
   ];
   "keytab-huginn.age".publicKeys = [
     users

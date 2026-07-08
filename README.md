@@ -140,3 +140,19 @@ age --decrypt \
 ```
 
 Touch the YubiKey when prompted.
+
+---
+
+## Development shell
+
+A devShell is provided for this repo's own tooling (`nixfmt`, plus the pre-commit hooks below):
+
+```bash
+cd /path/to/keytabs-matos-cc
+nix develop
+```
+
+This installs `nixfmt`/`markdownlint-cli2`/`commitlint` pre-commit hooks into `.git/hooks`,
+matching nixie's own hook set (`flake.nix`, `.commitlintrc.yaml`, `.markdownlint-cli2.yaml`).
+`ragenix` is not included here — it's still only in nixie's devShell
+(`nix develop /path/to/nixie`), per "Creating a new secret" above.

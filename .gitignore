@@ -7,3 +7,9 @@ keytab-*
 *.dec
 krb5.conf
 kdc.conf
+
+# Nix dev tooling artifacts — matches nixie's .gitignore
+/.direnv
+/result
+/.pre-commit-config.yaml
+/.claude

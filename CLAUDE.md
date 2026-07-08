@@ -157,8 +157,9 @@ Touch the YubiKey when prompted.
 ## Conventions
 
 - Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/)
-  (`feat:`, `fix:`, `chore:`, etc.), matching nixie's style, even though this repo has
-  no commitlint enforcement of its own.
+  (`feat:`, `fix:`, `chore:`, etc.), matching nixie's style, enforced by the same
+  commitlint/markdownlint-cli2/nixfmt pre-commit hooks as nixie (`flake.nix`,
+  `.commitlintrc.yaml`) — run `nix develop` once to install them.
 - Never commit decrypted plaintext.
 - Keep `README.md`'s Recipients and Secrets tables in sync with `secrets.nix` and the
   files actually present whenever either changes.

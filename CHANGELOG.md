@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- `LICENSE.md` — BSD 2-Clause License
 - Five backup YubiKey identities added as recipients (`secrets.nix`
   `users`): `age-yubikey-identity-2ab5ff2f.txt`,
   `age-yubikey-identity-49705840.txt`,

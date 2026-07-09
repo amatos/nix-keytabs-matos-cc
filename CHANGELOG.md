@@ -49,6 +49,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- `flake.nix` — dropped `x86_64-darwin` from `supportedSystems`; that
+  platform/architecture combination is being deprecated
 - `secrets.nix` — rotated the primary `alberth` recipient away from
   the original YubiKey (`age-yubikey-identity-9ca1fbf9.txt`) to the
   new recipient set above; all keytabs re-encrypted (`ragenix --rekey`)

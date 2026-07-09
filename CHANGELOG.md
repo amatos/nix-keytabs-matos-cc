@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- `age-yubikey-identity-b4d67c6f.txt` — YubiKey identity for `b4d67c6f`
 - `flake.nix`/`flake.lock` — pre-commit tooling only (`nixpkgs`,
   `pre-commit-hooks`), no system builds; same `nixfmt`/`markdownlint-cli2`/
   `commitlint` hook set as nixie, installed via `nix develop`

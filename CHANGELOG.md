@@ -9,6 +9,9 @@ All notable changes to this project will be documented in this file.
 - `shell.nix` — classic `nix-shell` environment (`rage`, `age`,
   `age-plugin-yubikey`, `git`) for working with age/YubiKey identities
   directly in this repo; documented in README "Development shell".
+- `.github/workflows/ci.yml` — new CI, `verify-signed-commits` job fails the
+  build if any commit in a push/PR has no GPG signature (`git log
+  --pretty=%G?`).
 
 ### Changed
 
@@ -16,6 +19,10 @@ All notable changes to this project will be documented in this file.
   `keytabs-matos-cc` to `nix-keytabs-matos-cc`, matching the same rename
   on GitHub.
 - `flake.nix` — dropped the unused `self` function arg flagged by nixd.
+- `CLAUDE.md` "Conventions" — now requires GPG-signed commits, matching
+  nixie's requirement (previously only release tags were documented as
+  signed), and documents the new CI enforcement; example `git commit`
+  commands updated to `git commit -S`.
 
 ---
 

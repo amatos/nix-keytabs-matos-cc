@@ -99,7 +99,7 @@ is required once per session for each YubiKey.
    ```bash
    # keytabs-matos.cc
    git add keytab-newhost.age secrets.nix
-   git commit -m "feat: add keytab-newhost"
+   git commit -S -m "feat: add keytab-newhost"
    git push
 
    # nixie — commit the module changes that reference the new keytab
@@ -136,7 +136,7 @@ is required once per session for each YubiKey.
 
    ```bash
    git add -A
-   git commit -m "chore: rekey secrets for newhostname"
+   git commit -S -m "chore: rekey secrets for newhostname"
    git push
    ```
 
@@ -160,6 +160,8 @@ Touch the YubiKey when prompted.
   (`feat:`, `fix:`, `chore:`, etc.), matching nixie's style, enforced by the same
   commitlint/markdownlint-cli2/nixfmt pre-commit hooks as nixie (`flake.nix`,
   `.commitlintrc.yaml`) — run `nix develop` once to install them.
+- All commits must be GPG-signed (`git commit -S`), matching nixie's requirement.
+  Enforced in CI by the `verify-signed-commits` job in `.github/workflows/ci.yml`.
 - Never commit decrypted plaintext.
 - Keep `README.md`'s Recipients and Secrets tables in sync with `secrets.nix` and the
   files actually present whenever either changes.

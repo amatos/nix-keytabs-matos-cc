@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+---
+
+## 26.07.04
+
 ### Added
 
 - `shell.nix` — classic `nix-shell` environment (`rage`, `age`,

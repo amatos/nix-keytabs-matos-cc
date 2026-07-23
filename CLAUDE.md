@@ -1,5 +1,17 @@
 # keytabs-matos.cc — project directives
 
+## Retired
+
+**This repo is retired as of 2026-07-23.** `nixie` no longer declares it as a flake input —
+binary secrets (Kerberos keytabs) live in
+[`nix-secrets`](https://github.com/amatos/nix-secrets) now, alongside text secrets, using
+`sops.secrets.<name>.format = "binary"` and the same `keytab-*.age` naming convention this repo
+used. This repo held no live secrets at the time of retirement (every keytab had already moved
+to `nix-secrets` during nixie's sops-nix migration — see nixie's `SOPS_MIGRATION.md` Step 27).
+
+**Do not add new secrets here.** The workflow documented below is kept only as a historical
+record of how this repo worked while it was live.
+
 ## Agent conventions
 
 Any message prefixed with `question:` is a purely theoretical/discussion
@@ -26,11 +38,9 @@ All files are encrypted with [sops](https://github.com/getsops/sops) (via
 [age](https://github.com/FiloSottile/age) as the underlying crypto backend, and
 decryptable by the recipients declared in `.sops.yaml`.
 
-> **Note:** as of the sops-nix migration, every host's own keytab now lives in
-> `nix-secrets` instead (`nix-secrets/keytab-<host>.age`) — see that repo's own
-> `README.md`. This repo currently declares no secrets; it exists as the destination
-> for the *next* binary Kerberos secret, not as a currently-populated store. The
-> workflow below still applies whenever that happens.
+> **Note:** as of the sops-nix migration, every host's own keytab lives in `nix-secrets`
+> instead (`nix-secrets/keytab-<host>.age`) — see that repo's own `README.md`. This repo
+> is retired (see "Retired" above) rather than a destination for future keytabs.
 
 ---
 

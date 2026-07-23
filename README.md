@@ -1,18 +1,20 @@
 # keytabs-matos.cc
 
+> **🚨 Retired as of 2026-07-23.** `nixie` no longer declares this repo as a flake input.
+> Binary secrets (Kerberos keytabs) live in
+> [`nix-secrets`](https://github.com/amatos/nix-secrets) now, alongside text secrets
+> (`nix-secrets/keytab-<host>.age`, `format = "binary"`) — see that repo's own `README.md`.
+> This repo held no live secrets at retirement. **Do not add new secrets here**; everything
+> below is kept only as a historical record.
+
 sops-encrypted Kerberos keytabs for the `MATOS.CC` realm, used by the [nixie](https://github.com/amatos/nixie)
 NixOS + nix-darwin configuration. All files are encrypted with [sops](https://github.com/getsops/sops)
 (via [sops-nix](https://github.com/Mic92/sops-nix) on the consuming/nixie side), using
 [age](https://github.com/FiloSottile/age) as the underlying crypto backend, and decryptable by
 the keys listed in `.sops.yaml`.
 
-This repo was split out of `nix-secrets`, which holds only non-keytab secrets (SSH keys, tokens,
-passwords, etc).
-
-> **Note:** every host's own keytab now lives in `nix-secrets` instead
-> (`nix-secrets/keytab-<host>.age`) — see that repo's own `README.md`. This repo currently
-> declares no secrets; it's the destination for the *next* binary Kerberos secret. The workflow
-> below still applies whenever that happens.
+This repo was split out of `nix-secrets`, which used to hold only non-keytab secrets (SSH keys,
+tokens, passwords, etc) — that split is now retired too; see the banner above.
 
 ## Recipients
 

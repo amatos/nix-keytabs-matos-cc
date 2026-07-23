@@ -6,6 +6,36 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## 26.07.06
+
+### Added
+
+- `.sops.yaml` — recipients scaffold ([sops](https://github.com/getsops/sops)/
+  [sops-nix](https://github.com/Mic92/sops-nix), replacing `secrets.nix`/
+  [ragenix](https://github.com/yaxitech/ragenix)), mirroring `nix-secrets`'s shared identities
+  (no host-specific `*_ssh` anchors yet — none needed until a host requires a keytab from this
+  repo again). Smoke-tested via a successful `sops -e -i` round-trip.
+- `CLAUDE.md`/`README.md` rewritten for the sops workflow, including sections this repo never
+  had under ragenix: updating an existing keytab's content, and adding/removing a recipient
+  (`sops updatekeys`).
+- `sops`/`ssh-to-age` added to `shell.nix`, so the documented manual-decrypt workflow works
+  standalone, not just via `nix develop /path/to/nixie`.
+
+### Removed
+
+- `keytab-codex.age`, `keytab-gammu.age`, `keytab-huginn.age`, `keytab-muninn.age`,
+  `keytab-porkchop.age`, `keytab-ldap-muninn.age`, `keytab-ldap-porkchop.age` — every host
+  keytab migrated to the sops-encrypted equivalent in `nix-secrets`
+  (`nix-secrets/keytab-<host>.age`); this repo currently declares no secrets.
+  `keytab-ldap-porkchop.age` specifically had zero consumers left (porkchop's LDAP role was
+  already decommissioned) and was deleted outright rather than migrated.
+- `age-yubikey-identity-d43f4e92.txt` — retired YubiKey identity stub, dropped from the new
+  `.sops.yaml` scaffold before it was ever used as a live recipient here.
+
+See `nixie`'s `SOPS_MIGRATION.md` for the full 8-phase migration record.
+
+---
+
 ## 26.07.05
 
 ### Added

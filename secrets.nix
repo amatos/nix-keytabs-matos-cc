@@ -6,11 +6,6 @@ let
   yubikey49705840 = "age1yubikey1qtkf5924nev2a5vqncdurp729tq6xmdf27y6x95fv7kk5zje5vqr6umpnj8";
   yubikey7cb1cad0 = "age1yubikey1q0pmgm34s0ckw8jj9auzlvm5mc6mpxxgc5syu0aw55cqu2hnm7krqrnq60a";
   yubikeyb4d67c6f = "age1yubikey1qt9a6xc0nzpe484kzeuw55hsm4shu3ug9j6m4ngtsexqrgptd6zfx596dqn";
-  codex = "age1yl42nc3qmtper3vt7am3f2u6f2afp7scu2nqxfqjlw4qn64qeaqq20xkcc";
-  gammu = "age12vhj5z6zepnz7uyzks23p6rgwa7rudja7ectsrl89zf96nnmfcnq264972";
-  porkchop = "age1yegmaunkewrxj3v6lt86nalta0xq5gq7dpcxrggqp8p7nlzdde4qsnq5jz";
-  huginn = "age1je5xg9s90g8l0307xpphclxj3fugvkl59ne9yna46lne9fw0wfpq59lzux";
-  muninn = "age1hryy6kdlt3ufej07r9rp2g8x8pm0e6ndgdyke6jdq95uchnjdghqprayh9";
 
   users = [
     alberth
@@ -22,34 +17,10 @@ let
     yubikeyb4d67c6f
   ];
 in
+# No secrets currently declared — the last one, keytab-ldap-muninn.age, was
+# deleted once nix-secrets/keytab-ldap-muninn.age (sops-encrypted) fully
+# replaced it (SOPS_MIGRATION.md Step 27, after Phase 5's real cutover
+# validated the replacement live on muninn). `users` kept for whenever a new
+# binary secret needs this repo again.
 {
-  "keytab-codex.age".publicKeys = [
-    users
-    codex
-  ];
-
-  "keytab-gammu.age".publicKeys = [
-    users
-    gammu
-  ];
-  "keytab-porkchop.age".publicKeys = [
-    users
-    porkchop
-  ];
-  "keytab-ldap-porkchop.age".publicKeys = [
-    users
-    porkchop
-  ];
-  "keytab-huginn.age".publicKeys = [
-    users
-    huginn
-  ];
-  "keytab-muninn.age".publicKeys = [
-    users
-    muninn
-  ];
-  "keytab-ldap-muninn.age".publicKeys = [
-    users
-    muninn
-  ];
 }

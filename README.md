@@ -1,43 +1,46 @@
 # keytabs-matos.cc
 
-Age-encrypted Kerberos keytabs for the `MATOS.CC` realm, used by the [nixie](https://github.com/amatos/nixie)
-NixOS + nix-darwin configuration. All files are encrypted with [ragenix](https://github.com/yaxitech/ragenix)
-and decryptable by the keys listed in `secrets.nix`.
+sops-encrypted Kerberos keytabs for the `MATOS.CC` realm, used by the [nixie](https://github.com/amatos/nixie)
+NixOS + nix-darwin configuration. All files are encrypted with [sops](https://github.com/getsops/sops)
+(via [sops-nix](https://github.com/Mic92/sops-nix) on the consuming/nixie side), using
+[age](https://github.com/FiloSottile/age) as the underlying crypto backend, and decryptable by
+the keys listed in `.sops.yaml`.
 
-This repo was split out of `nix-secrets`, which now holds only non-keytab secrets (SSH keys, tokens, passwords, etc).
+This repo was split out of `nix-secrets`, which holds only non-keytab secrets (SSH keys, tokens,
+passwords, etc).
+
+> **Note:** every host's own keytab now lives in `nix-secrets` instead
+> (`nix-secrets/keytab-<host>.age`) — see that repo's own `README.md`. This repo currently
+> declares no secrets; it's the destination for the *next* binary Kerberos secret. The workflow
+> below still applies whenever that happens.
 
 ## Recipients
 
 | Name | Type | Key |
 | --- | --- | --- |
 | `alberth` | Recovery key (offline, no hardware) | `age1gp5d3tzdpufcrk7f6dkr92xtx2p847k79kxxdp9nn0yjk2qvw34sws84m7` |
-| `yubikeyd43f4e92` | YubiKey (slot 2) | `age1yubikey1qdxkz5rs00du7y4284ehlkktq0h93wsqszwegjrx97scqs8ptq3f6kws7sq` |
-| `yubikey2ab5ff2f` | YubiKey (backup, slot 1) | `age1yubikey1qtn8y2ad0vr9ddazfsxy4fmlt64kknhjsll2xvfgekck3n0dc0xjvf5rah6` |
-| `yubikeybe7a2b66` | YubiKey (backup, slot 1) | `age1yubikey1qgmkn4s840hwg4kfazjn6u4r2nq9utl60chscraq4sqg9jsf0wleu5eldvv` |
-| `yubikey49705840` | YubiKey (backup, slot 1) | `age1yubikey1qtkf5924nev2a5vqncdurp729tq6xmdf27y6x95fv7kk5zje5vqr6umpnj8` |
-| `yubikey7cb1cad0` | YubiKey (backup, slot 1) | `age1yubikey1q0pmgm34s0ckw8jj9auzlvm5mc6mpxxgc5syu0aw55cqu2hnm7krqrnq60a` |
-| `codex` | Host key (`/etc/age/host-key`) | `age1786r092jkepdahryx7t9kru8txuvreh3f2pgtvrv3u5hmjxjjy3st9udnl` |
-| `gammu` | Host key (`/etc/age/host-key`) | `age12vhj5z6zepnz7uyzks23p6rgwa7rudja7ectsrl89zf96nnmfcnq264972` |
-| `porkchop` | Host key (`/etc/age/host-key`) | `age1yegmaunkewrxj3v6lt86nalta0xq5gq7dpcxrggqp8p7nlzdde4qsnq5jz` |
-| `huginn` | Host key (`/etc/age/host-key`) | `age1je5xg9s90g8l0307xpphclxj3fugvkl59ne9yna46lne9fw0wfpq59lzux` |
+| `yubikey_d43f4e92` | YubiKey (touch + PIN) | `age1yubikey1qdxkz5rs00du7y4284ehlkktq0h93wsqszwegjrx97scqs8ptq3f6kws7sq` |
+| `yubikey_2ab5ff2f` | YubiKey (touch + PIN) | `age1yubikey1qtn8y2ad0vr9ddazfsxy4fmlt64kknhjsll2xvfgekck3n0dc0xjvf5rah6` |
+| `yubikey_be7a2b66` | YubiKey (touch + PIN) | `age1yubikey1qgmkn4s840hwg4kfazjn6u4r2nq9utl60chscraq4sqg9jsf0wleu5eldvv` |
+| `yubikey_49705840` | YubiKey (touch + PIN) | `age1yubikey1qtkf5924nev2a5vqncdurp729tq6xmdf27y6x95fv7kk5zje5vqr6umpnj8` |
+| `yubikey_7cb1cad0` | YubiKey (touch + PIN) | `age1yubikey1q0pmgm34s0ckw8jj9auzlvm5mc6mpxxgc5syu0aw55cqu2hnm7krqrnq60a` |
+| `yubikey_b4d67c6f` | YubiKey (touch + PIN) | `age1yubikey1qt9a6xc0nzpe484kzeuw55hsm4shu3ug9j6m4ngtsexqrgptd6zfx596dqn` |
 
-Five YubiKey identity stubs are stored in
-`age-yubikey-identity-{2ab5ff2f,49705840,7cb1cad0,be7a2b66,d43f4e92}.txt`,
-one per physical key. Touch policy is **cached** (one touch valid for 15
-seconds); a **PIN is required once per session** for these keys. `alberth`'s
-recovery key has no hardware component and is kept offline.
+No non-interactive (PIN/touch-Never) YubiKey identity exists in this repo yet, unlike
+`nix-secrets`'s `yubikey_0634d1c4` — add one following that pattern if scripted/agent decryption
+is ever needed here. No `*_ssh` host anchors exist yet either, since no host currently needs a
+keytab from this repo; see `.sops.yaml`'s header comment for how to add one.
+
+Six YubiKey identity stubs are stored in
+`age-yubikey-identity-{2ab5ff2f,49705840,7cb1cad0,b4d67c6f,be7a2b66,d43f4e92}.txt`, one per
+physical key. Touch + PIN required once per session for each. `alberth`'s recovery key has no
+hardware component and is kept offline.
 
 ## Secrets
 
-| File | Purpose |
-| --- | --- |
-| `keytab-codex.age` | Host keytab for `codex`, deployed to `/etc/krb5.keytab` |
-| `keytab-gammu.age` | Host keytab for `gammu`, deployed to `/etc/krb5.keytab` |
-| `keytab-porkchop.age` | Host keytab for `porkchop`, deployed to `/etc/krb5.keytab` |
-| `keytab-ldap-porkchop.age` | SASL/GSSAPI keytab for the `ldap/` service principal on `porkchop`, deployed for `services.kerberosLdap.ldap.saslKeytabFile` |
-| `keytab-huginn.age` | Host keytab for `huginn`, deployed to `/etc/krb5.keytab` |
-
-Each host's keytab is wired into nixie via `nixie.krb5.keytabFile` (see `modules/common/krb5-client.nix`), e.g.:
+None currently. When a keytab is added, wire it into nixie via `nixie.krb5.keytabFile` (see
+`modules/common/krb5-client.nix`) or a service-specific option (e.g.
+`services.kerberosLdap.ldap.saslKeytabFile`), e.g.:
 
 ```nix
 nixie.krb5.keytabFile = "${nix-keytabs-matos-cc}/keytab-codex.age";
@@ -47,25 +50,28 @@ nixie.krb5.keytabFile = "${nix-keytabs-matos-cc}/keytab-codex.age";
 
 ## Creating a new secret
 
-**Prerequisites:** YubiKey inserted; `ragenix` available (it's in the nixie devShell: `nix develop /path/to/nixie`).
+**Prerequisites:** YubiKey inserted; `sops`/`age`/`ssh-to-age` available (they're in nixie's
+devShell: `nix develop /path/to/nixie`).
 
-### 1. Declare the secret in `secrets.nix`
+### 1. Confirm (or add) a `.sops.yaml` rule
 
-Add an entry mapping the new filename to the list of recipient keys that should be able to decrypt it:
+The fleet-wide catch-all `.*` rule covers anything without a narrower match. Add a
+`path_regex`-scoped rule (see `.sops.yaml`'s header comment) if the new keytab needs a narrower
+recipient set — typically the shared identities plus one host's `*_ssh` anchor.
 
-```nix
-"keytab-newhost.age".publicKeys = [ users newhost ];
-```
+### 2. Create the encrypted file
 
-### 2. Create (or edit) the encrypted file
+Binary content requires `--input-type binary --output-type binary`:
 
 ```bash
 cd /path/to/nix-keytabs-matos-cc
-ragenix -e keytab-newhost.age
+cp /path/to/generated/keytab keytab-newhost.age
+sops -e -i --input-type binary --output-type binary keytab-newhost.age
 ```
 
-This opens `$EDITOR`. Paste or type the keytab content, save, and close. ragenix encrypts the content
-to all recipients listed in `secrets.nix` and writes `keytab-newhost.age`.
+`sops -e -i` (in place), not a shell redirect (`sops -e ... > keytab-newhost.age`) — `sops`
+matches `.sops.yaml`'s `path_regex` against the *input* path, so a redirect target isn't seen by
+the matcher and can silently pick the wrong recipient rule.
 
 Touch the YubiKey when prompted (the LED will blink).
 
@@ -77,11 +83,14 @@ In the host's `default.nix`, set:
 nixie.krb5.keytabFile = "${nix-keytabs-matos-cc}/keytab-newhost.age";
 ```
 
+which `modules/common/krb5-client.nix` wires into `sops.secrets.hostKeytab` with
+`format = "binary"`.
+
 ### 4. Commit both repos
 
 ```bash
 # keytabs-matos.cc
-git add keytab-newhost.age secrets.nix
+git add keytab-newhost.age .sops.yaml
 git commit -m "feat: add keytab-newhost"
 git push
 
@@ -90,56 +99,63 @@ git push
 
 ---
 
-## Rekeying secrets (after adding a new host)
+## Updating an existing keytab's content
 
-When a new host is added to nixie, generate its host key (`nixos-rebuild switch` will create
-`/etc/age/host-key` on first activation), then add its public key to `secrets.nix` and rekey all
-secrets so the new host can decrypt them:
-
-### 1. Get the new host's public key
-
-On the new host after first activation:
-
-```bash
-age-keygen -y /etc/age/host-key
-```
-
-### 2. Add it to `secrets.nix`
-
-```nix
-let
-  newhostname = "age1...";   # paste public key here
-in ...
-```
-
-### 3. Rekey all secrets
+No recipient change needed:
 
 ```bash
 cd /path/to/nix-keytabs-matos-cc
-ragenix --rekey
+cp /path/to/regenerated/keytab keytab-codex.age
+sops -e -i --input-type binary --output-type binary keytab-codex.age
 ```
 
-Touch the YubiKey when prompted (once per secret file).
+`sops` re-encrypts to the same recipients already declared for that file. Commit as usual.
 
-### 4. Commit
+## Adding a recipient to an existing keytab
 
-```bash
-git add -A
-git commit -m "chore: rekey secrets for newhostname"
-git push
-```
+1. Add the key to `.sops.yaml`'s `keys:` list (a new `&<host>_ssh` anchor for a new host — see
+   "Recipients" above), then reference it from the relevant rule's `key_groups`.
+2. Re-encrypt the file's data key for the new recipient set — no need to touch the binary
+   content itself:
+
+   ```bash
+   sops updatekeys keytab-codex.age
+   ```
+
+   Touch the YubiKey when prompted (once per file).
+3. Commit and push.
+
+## Removing a recipient
+
+1. Delete the key from `.sops.yaml`'s `key_groups` (and its `keys:` anchor, if nothing else
+   references it).
+2. `sops updatekeys <file>` for each affected file.
+3. Commit and push.
+
+**This does not rotate the keytab.** For a security-motivated removal, regenerate the
+principal's key (`kadmin.local -q "cpw -randkey <principal>"` + re-`ktadd`) rather than treating
+this as sufficient on its own — a leaked keytab grants ongoing authentication as that principal.
 
 ---
 
 ## Decrypting a secret manually
 
 ```bash
-age --decrypt \
-  -i age-yubikey-identity-d43f4e92.txt \
-  keytab-codex.age
+sops --decrypt --input-type binary --output-type binary \
+  keytab-codex.age > /tmp/keytab-codex
 ```
 
-Touch the YubiKey when prompted.
+or, to pin a specific identity:
+
+```bash
+export SOPS_AGE_KEY_FILE=age-yubikey-identity-d43f4e92.txt
+sops --decrypt --input-type binary --output-type binary \
+  keytab-codex.age > /tmp/keytab-codex
+```
+
+Touch the YubiKey when prompted. Verify the content landed correctly with a hex dump
+(`xxd /tmp/keytab-codex | head`) rather than assuming — a garbled/wrong-length keytab has bitten
+this fleet before (see nixie's `SOPS_MIGRATION.md`).
 
 ---
 
@@ -163,12 +179,12 @@ direnv allow
 
 This installs `nixfmt`/`markdownlint-cli2`/`commitlint` pre-commit hooks into `.git/hooks`,
 matching nixie's own hook set (`flake.nix`, `.commitlintrc.yaml`, `.markdownlint-cli2.yaml`).
-`ragenix` is not included here — it's still only in nixie's devShell
+`sops`/`age`/`ssh-to-age` are not included here — they're in nixie's devShell
 (`nix develop /path/to/nixie`), per "Creating a new secret" above.
 
 A separate `shell.nix` (classic `nix-shell`, not part of the flake outputs above) provides
-`rage`, `age`, `age-plugin-yubikey`, and `git` for working with age/YubiKey identities directly
-in this repo without going through nixie's devShell:
+`sops`, `age`, `age-plugin-yubikey`, `ssh-to-age`, and `git` for working with sops/age/YubiKey
+identities directly in this repo without going through nixie's devShell:
 
 ```bash
 nix-shell

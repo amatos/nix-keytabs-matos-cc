@@ -19,7 +19,6 @@ passwords, etc).
 | Name | Type | Key |
 | --- | --- | --- |
 | `alberth` | Recovery key (offline, no hardware) | `age1gp5d3tzdpufcrk7f6dkr92xtx2p847k79kxxdp9nn0yjk2qvw34sws84m7` |
-| `yubikey_d43f4e92` | YubiKey (touch + PIN) | `age1yubikey1qdxkz5rs00du7y4284ehlkktq0h93wsqszwegjrx97scqs8ptq3f6kws7sq` |
 | `yubikey_2ab5ff2f` | YubiKey (touch + PIN) | `age1yubikey1qtn8y2ad0vr9ddazfsxy4fmlt64kknhjsll2xvfgekck3n0dc0xjvf5rah6` |
 | `yubikey_be7a2b66` | YubiKey (touch + PIN) | `age1yubikey1qgmkn4s840hwg4kfazjn6u4r2nq9utl60chscraq4sqg9jsf0wleu5eldvv` |
 | `yubikey_49705840` | YubiKey (touch + PIN) | `age1yubikey1qtkf5924nev2a5vqncdurp729tq6xmdf27y6x95fv7kk5zje5vqr6umpnj8` |
@@ -29,10 +28,12 @@ passwords, etc).
 No non-interactive (PIN/touch-Never) YubiKey identity exists in this repo yet, unlike
 `nix-secrets`'s `yubikey_0634d1c4` — add one following that pattern if scripted/agent decryption
 is ever needed here. No `*_ssh` host anchors exist yet either, since no host currently needs a
-keytab from this repo; see `.sops.yaml`'s header comment for how to add one.
+keytab from this repo; see `.sops.yaml`'s header comment for how to add one. (A sixth identity,
+`yubikey_d43f4e92`, was retired in `nix-secrets` and never carried over here — its stub file is
+gone too.)
 
-Six YubiKey identity stubs are stored in
-`age-yubikey-identity-{2ab5ff2f,49705840,7cb1cad0,b4d67c6f,be7a2b66,d43f4e92}.txt`, one per
+Five YubiKey identity stubs are stored in
+`age-yubikey-identity-{2ab5ff2f,49705840,7cb1cad0,b4d67c6f,be7a2b66}.txt`, one per
 physical key. Touch + PIN required once per session for each. `alberth`'s recovery key has no
 hardware component and is kept offline.
 
@@ -148,7 +149,7 @@ sops --decrypt --input-type binary --output-type binary \
 or, to pin a specific identity:
 
 ```bash
-export SOPS_AGE_KEY_FILE=age-yubikey-identity-d43f4e92.txt
+export SOPS_AGE_KEY_FILE=age-yubikey-identity-2ab5ff2f.txt
 sops --decrypt --input-type binary --output-type binary \
   keytab-codex.age > /tmp/keytab-codex
 ```

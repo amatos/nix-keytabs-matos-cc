@@ -48,11 +48,12 @@ Defined in `.sops.yaml`'s `keys:` list as YAML anchors, referenced from each rul
 `key_groups`:
 
 - `alberth` — an offline recovery key, no hardware.
-- Six YubiKey identities (`yubikey_d43f4e92`, `yubikey_2ab5ff2f`, `yubikey_be7a2b66`,
-  `yubikey_49705840`, `yubikey_7cb1cad0`, `yubikey_b4d67c6f`) — touch + PIN required each
-  session. Unlike `nix-secrets`, this repo does not currently carry a non-interactive
-  (PIN/touch-Never) YubiKey identity; add one following `nix-secrets`'s
-  `yubikey_0634d1c4` pattern if scripted/agent decryption is ever needed here.
+- Five YubiKey identities (`yubikey_2ab5ff2f`, `yubikey_be7a2b66`, `yubikey_49705840`,
+  `yubikey_7cb1cad0`, `yubikey_b4d67c6f`) — touch + PIN required each session. Unlike
+  `nix-secrets`, this repo does not currently carry a non-interactive (PIN/touch-Never)
+  YubiKey identity; add one following `nix-secrets`'s `yubikey_0634d1c4` pattern if
+  scripted/agent decryption is ever needed here. (A sixth identity, `yubikey_d43f4e92`,
+  was retired in `nix-secrets` and never carried over here — its stub file is gone too.)
 - One `*<host>_ssh` anchor per nixie host that needs to decrypt a keytab at activation
   time — that host's real SSH host key (`/etc/ssh/ssh_host_ed25519_key.pub`) converted
   to age's X25519 form via `ssh-to-age`. This **must** be the converted `age1...`
@@ -63,8 +64,8 @@ Defined in `.sops.yaml`'s `keys:` list as YAML anchors, referenced from each rul
   `sops.age.sshKeyPaths` (sops-nix's default whenever `services.openssh.enable` is
   true, which every nixie host already sets).
 
-The six YubiKey identity stubs are stored in
-`age-yubikey-identity-{2ab5ff2f,49705840,7cb1cad0,b4d67c6f,be7a2b66,d43f4e92}.txt`, one
+The five YubiKey identity stubs are stored in
+`age-yubikey-identity-{2ab5ff2f,49705840,7cb1cad0,b4d67c6f,be7a2b66}.txt`, one
 per physical key (stub/pointer files for `age-plugin-yubikey`, not the private keys
 themselves). `alberth`'s recovery key has no hardware component and is kept offline.
 
@@ -83,7 +84,7 @@ nixie's devShell: `nix develop /path/to/nixie`).
      key_groups:
        - age:
            - *alberth
-           - *yubikey_d43f4e92
+           - *yubikey_2ab5ff2f
            # ... the rest of the YubiKey anchors
            - *newhost_ssh
    ```
@@ -205,7 +206,7 @@ Uses whichever age identity file(s) `sops` finds via `SOPS_AGE_KEY_FILE`/`age`'s
 default identity discovery, or pass one explicitly:
 
 ```bash
-export SOPS_AGE_KEY_FILE=age-yubikey-identity-d43f4e92.txt
+export SOPS_AGE_KEY_FILE=age-yubikey-identity-2ab5ff2f.txt
 sops --decrypt --input-type binary --output-type binary \
   keytab-codex.age > /tmp/keytab-codex
 ```

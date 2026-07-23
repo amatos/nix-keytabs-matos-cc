@@ -1,7 +1,0 @@
-#       Serial: 13125942, Slot: 2
-#         Name: age identity d43f4e92
-#      Created: Sat, 04 Jul 2026 21:28:16 +0000
-#   PIN policy: Once   (A PIN is required once per session, if set)
-# Touch policy: Cached (A physical touch is required for decryption, and is cached for 15 seconds)
-#    Recipient: age1yubikey1qdxkz5rs00du7y4284ehlkktq0h93wsqszwegjrx97scqs8ptq3f6kws7sq
-AGE-PLUGIN-YUBIKEY-1XEYUSQYR6SL5AYSZQLTNH
